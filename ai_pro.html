@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuraServe | 企业级AI智能交互中枢</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --primary-dark: #2667cc;
+            --secondary: #8338ec;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-border: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #8b5cf6;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark-bg) 0%, #1a202c 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--gradient-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* ===== 科技感头部 ===== */
+        .hero {
+            position: relative;
+            padding: 100px 20px;
+            text-align: center;
+            background: radial-gradient(ellipse at center, rgba(58, 134, 255, 0.15) 0%, transparent 70%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 60px;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 50px;
+            font-weight: 300;
+        }
+        
+        .tech-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        
+        .tech-stat {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            padding: 30px;
+            min-width: 200px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-stat:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(58, 134, 255, 0.2);
+        }
+        
+        .tech-stat::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+        }
+        
+        .stat-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: block;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* ===== 暗色卡片设计 ===== */
+        .section {
+            margin-bottom: 80px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+        }
+        
+        .card {
+            background: var(--dark-card);
+            border-radius: 20px;
+            padding: 50px;
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        /* ===== 网格布局 ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 35px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(58, 134, 255, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            display: inline-block;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* ===== 对比区域 ===== */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .comparison-card {
+            background: var(--dark-card);
+            border-radius: 18px;
+            padding: 40px;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .comparison-card.legacy {
+            border-color: #ef4444;
+        }
+        
+        .comparison-card.ai {
+            border-color: var(--accent-green);
+        }
+        
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--dark-border);
+        }
+        
+        .comparison-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+        }
+        
+        .legacy .comparison-icon {
+            color: #ef4444;
+        }
+        
+        .ai .comparison-icon {
+            color: var(--accent-green);
+        }
+        
+        /* ===== 价格卡片 ===== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-top: 50px;
+        }
+        
+        .pricing-card {
+            background: var(--dark-card);
+            border-radius: 20px;
+            padding: 45px 35px;
+            border: 2px solid var(--dark-border);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+        
+        .pricing-card.recommended {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(58, 134, 255, 0.2);
+        }
+        
+        .recommended-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-primary);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+        
+        .price-tag {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 25px 0;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* ===== 表单区域 ===== */
+        .form-section {
+            background: var(--dark-card);
+            border-radius: 25px;
+            padding: 60px;
+            margin: 80px 0;
+            border: 1px solid var(--dark-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .form-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--dark-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+        }
+        
+        /* ===== 按钮设计 ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(58, 134, 255, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(58, 134, 255, 0.1);
+        }
+        
+        .btn-large {
+            padding: 22px 50px;
+            font-size: 1.2rem;
+            border-radius: 15px;
+        }
+        
+        /* ===== 响应式设计 ===== */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 3rem; }
+            .tech-stats { gap: 20px; }
+            .tech-stat { min-width: 170px; padding: 25px; }
+            .form-row { flex-direction: column; gap: 20px; }
+            .pricing-card.recommended { transform: none; }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .card, .form-section { padding: 35px 25px; }
+            .tech-stat { min-width: 140px; padding: 20px; }
+            .stat-value { font-size: 2.2rem; }
+        }
+        
+        /* ===== 动画效果 ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- 科技感头部 -->
+    <section class="hero">
+        <div class="container">
+            <h1>NeuraServe AI交互中枢</h1>
+            <p class="hero-subtitle">基于多模态大语言模型的企业级智能解决方案 · 重新定义人机交互效率边界</p>
+            
+            <div class="tech-stats">
+                <div class="tech-stat floating">
+                    <span class="stat-value">99.2%</span>
+                    <span class="stat-label">意图识别准确率</span>
+                </div>
+                <div class="tech-stat floating" style="animation-delay: 0.5s;">
+                    <span class="stat-value">24/7</span>
+                    <span class="stat-label">毫秒级响应</span>
+                </div>
+                <div class="tech-stat floating" style="animation-delay: 1s;">
+                    <span class="stat-value">&lt;200ms</span>
+                    <span class="stat-label">平均响应延迟</span>
+                </div>
+                <div class="tech-stat floating" style="animation-delay: 1.5s;">
+                    <span class="stat-value">50+</span>
+                    <span class="stat-label">行业知识库</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- 痛点分析 -->
+        <section class="section">
+            <h2 class="section-title">传统客服系统面临的挑战</h2>
+            <div class="card">
+                <div class="grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                        <h3>认知局限</h3>
+                        <p>传统规则引擎无法理解自然语言中的上下文、意图和情感，导致大量误判和用户挫败感。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                        <h3>维护成本指数增长</h3>
+                        <p>每增加一个新业务场景，需要人工编写和维护大量规则，维护成本随业务复杂度指数级上升。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>无法规模化学习</h3>
+                        <p>系统无法从历史对话中自主学习优化，相同问题需要人工反复调整，缺乏进化能力。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-plug"></i></div>
+                        <h3>集成复杂度高</h3>
+                        <p>与现有业务系统（CRM、ERP、工单系统）对接困难，数据孤岛问题严重。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技术架构 -->
+        <section class="section">
+            <h2 class="section-title">核心技术架构</h2>
+            <div class="card">
+                <div class="grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                        <h3>多层感知架构</h3>
+                        <p>意图识别 → 实体提取 → 上下文管理 → 知识检索 → 响应生成的多层处理流水线。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-database"></i></div>
+                        <h3>向量知识库</h3>
+                        <p>基于BERT和Sentence Transformers的语义检索，支持百万级知识点的毫秒级匹配。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-network-wired"></i></div>
+                        <h3>微服务架构</h3>
+                        <p>容器化部署，弹性伸缩，支持每秒千级并发请求，99.95%服务可用性保障。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>企业级安全</h3>
+                        <p>端到端加密传输，私有化部署选项，SOC2合规，完整审计日志。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 投资回报对比 -->
+        <section class="section">
+            <h2 class="section-title">经济性分析</h2>
+            <div class="card">
+                <div class="comparison-container">
+                    <div class="comparison-card legacy">
+                        <div class="comparison-header">
+                            <div class="comparison-icon"><i class="fas fa-users"></i></div>
+                            <div>
+                                <h3>传统人工团队</h3>
+                                <p style="color: var(--text-secondary); font-size: 0.95rem;">5人客服团队 · 年度成本</p>
+                            </div>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 800; color: #ef4444; margin: 25px 0;">¥640,000</div>
+                        <ul style="list-style: none; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <i class="fas fa-times" style="color: #ef4444; position: absolute; left: 0;"></i>
+                                人力成本：¥500,000（薪资+福利）
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <i class="fas fa-times" style="color: #ef4444; position: absolute; left: 0;"></i>
+                                培训与管理：¥80,000
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <i class="fas fa-times" style="color: #ef4444; position: absolute; left: 0;"></i>
+                                系统工具费用：¥60,000
+                            </li>
+                            <li style="padding-left: 20px; position: relative;">
+                                <i class="fas fa-times" style="color: #ef4444; position: absolute; left: 0;"></i>
+                                仅支持8小时/天，节假日无服务
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-card ai">
+                        <div class="comparison-header">
+                            <div class="comparison-icon"><i class="fas fa-robot"></i></div>
+                            <div>
+                                <h3>AI智能中枢</h3>
+                                <p style="color: var(--text-secondary); font-size: 0.95rem;">企业版 · 年度服务</p>
+                            </div>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 800; color: var(--accent-green); margin: 25px 0;">¥98,000</div>
+                        <ul style="list-style: none; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--accent-green); position: absolute; left: 0;"></i>
+                                全功能AI系统 + 5个坐席授权
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--accent-green); position: absolute; left: 0;"></i>
+                                全年技术维护与更新
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 20px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--accent-green); position: absolute; left: 0;"></i>
+                                专属模型训练与优化
+                            </li>
+                            <li style="padding-left: 20px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--accent-green); position: absolute; left: 0;"></i>
+                                7×24小时服务，无限并发
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 50px; padding: 40px; background: rgba(16, 185, 129, 0.1); border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                    <div style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 15px;">年度净节省</div>
+                    <div style="font-size: 4rem; font-weight: 800; color: var(--accent-green); margin-bottom: 20px;">¥542,000</div>
+                    <div style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                        相当于<span style="color: var(--accent-green); font-weight: 700;">85%的成本削减</span>，投资回报周期仅<span style="color: var(--accent-green); font-weight: 700;">2.1个月</span>。回本后每年产生持续正向现金流。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实施方案 -->
+        <section class="section">
+            <h2 class="section-title">实施流程</h2>
+            <div class="card">
+                <div class="grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <h3>需求诊断</h3>
+                        <p>第1周：业务场景分析，对话数据收集，成功指标定义。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-cogs"></i></div>
+                        <h3>系统配置</h3>
+                        <p>第2周：知识库构建，业务流程映射，模型微调。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-vial"></i></div>
+                        <h3>测试优化</h3>
+                        <p>第3周：多轮对话测试，准确率优化，性能调优。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+                        <h3>上线支持</h3>
+                        <p>第4周：生产环境部署，团队培训，监控体系建立。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 定价 -->
+        <section class="section">
+            <h2 class="section-title">服务方案</h2>
+            <div class="card">
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">基础版</h3>
+                        <div class="price-tag">¥9,800</div>
+                        <div style="color: var(--text-secondary); margin-bottom: 30px;">年度订阅</div>
+                        <ul style="list-style: none; margin-bottom: 35px; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                标准AI客服功能
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                3个平台接入
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                基础知识库管理
+                            </li>
+                            <li style="padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                工作日技术支持
+                            </li>
+                        </ul>
+                        <button class="btn" onclick="showContactForm('基础版')">咨询方案</button>
+                    </div>
+                    
+                    <div class="pricing-card recommended">
+                        <div class="recommended-badge">推荐选择</div>
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">专业版</h3>
+                        <div class="price-tag">¥29,800</div>
+                        <div style="color: var(--text-secondary); margin-bottom: 30px;">年度订阅</div>
+                        <ul style="list-style: none; margin-bottom: 35px; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                高级AI + 自定义工作流
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                无限平台接入
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                专属模型训练
+                            </li>
+                            <li style="padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                7×24小时优先支持
+                            </li>
+                        </ul>
+                        <button class="btn" onclick="showContactForm('专业版')">获取定制方案</button>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">企业版</h3>
+                        <div class="price-tag">定制</div>
+                        <div style="color: var(--text-secondary); margin-bottom: 30px;">按需定价</div>
+                        <ul style="list-style: none; margin-bottom: 35px; color: var(--text-secondary);">
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                全功能私有化部署
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                API深度集成支持
+                            </li>
+                            <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                专属客户成功团队
+                            </li>
+                            <li style="padding-left: 24px; position: relative;">
+                                <i class="fas fa-check" style="color: var(--primary); position: absolute; left: 0;"></i>
+                                SLA服务等级保障
+                            </li>
+                        </ul>
+                        <button class="btn" onclick="showContactForm('企业版')">联系销售</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系方式表单 -->
+        <section class="form-section" id="contactForm">
+            <h2 class="form-title">获取专属技术方案</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                请填写以下信息，我们的解决方案架构师将在2小时内与您联系，并提供针对您业务场景的技术方案演示。
+            </p>
+            
+            <form id="solutionForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="company">公司/机构名称</label>
+                        <input type="text" id="company" class="form-control" required placeholder="请输入完整的公司名称">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="name">联系人</label>
+                        <input type="text" id="name" class="form-control" required placeholder="您的姓名">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="phone">联系电话</label>
+                        <input type="tel" id="phone" class="form-control" required placeholder="用于技术顾问与您沟通">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="wechat">微信</label>
+                        <input type="text" id="wechat" class="form-control" placeholder="用于发送详细技术文档">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="industry">所属行业</label>
+                        <select id="industry" class="form-control" required>
+                            <option value="">请选择行业...</option>
+                            <option value="ecommerce">电子商务/零售</option>
+                            <option value="finance">金融/保险</option>
+                            <option value="education">教育/培训</option>
+                            <option value="healthcare">医疗健康</option>
+                            <option value="manufacturing">生产制造</option>
+                            <option value="it">信息技术</option>
+                            <option value="other">其他行业</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="employees">公司规模</label>
+                        <select id="employees" class="form-control" required>
+                            <option value="">请选择规模...</option>
+                            <option value="1-50">1-50人</option>
+                            <option value="51-200">51-200人</option>
+                            <option value="201-1000">201-1000人</option>
+                            <option value="1000+">1000人以上</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="requirements">具体需求描述</label>
+                    <textarea id="requirements" class="form-control" rows="5" placeholder="请详细描述您希望通过AI系统解决的具体业务问题、现有系统情况、期望的时间规划等。信息越详细，我们的方案会越精准。"></textarea>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <button type="submit" class="btn btn-large">
+                        <i class="fas fa-paper-plane"></i> 提交需求，获取技术方案
+                    </button>
+                    <p style="color: var(--text-secondary); margin-top: 20px; font-size: 0.9rem;">
+                        提交即表示您同意我们根据您提供的信息准备技术方案。您的信息将被严格保密。
+                    </p>
+                </div>
+            </form>
+            
+            <!-- 提交成功后的信息 -->
+            <div id="successMessage" style="display: none; text-align: center; padding: 50px;">
+                <div style="font-size: 4rem; color: var(--accent-green); margin-bottom: 20px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 style="font-size: 2rem; margin-bottom: 20px;">需求已提交成功</h3>
+                <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    我们的解决方案架构师已收到您的需求，将在2小时内通过您提供的联系方式与您联系。
+                </p>
+                <div style="background: rgba(58, 134, 255, 0.1); border-radius: 16px; padding: 30px; margin-top: 30px; display: inline-block; border: 1px solid rgba(58, 134, 255, 0.3);">
+                    <div style="font-weight: 700; color: var(--primary); margin-bottom: 10px;">直接联系渠道</div>
+                    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">技术顾问微信</div>
+                            <div style="font-weight: 700;
