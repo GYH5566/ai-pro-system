@@ -2,10 +2,15 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <!-- 关键修复：视口设置 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NeuraServe | 企业级AI智能交互中枢</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <!-- iOS专用修复 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
 </head>
 <body>
     <!-- 页面指示器 -->
@@ -49,6 +54,534 @@
                         <div class="stat-card">
                             <span class="stat-number">50+</span>
                             <span class="stat-label">行业知识库</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 页面2：痛点分析 -->
+            <section class="page page-2" id="page2">
+                <div class="page-content">
+                    <div class="card-common">
+                        <div class="card-header">
+                            <h2 class="card-title">传统客服系统面临的挑战</h2>
+                            <p class="card-subtitle">传统规则引擎已无法满足现代企业的智能化需求，以下核心痛点亟需解决</p>
+                        </div>
+                        
+                        <div class="card-grid-2x2">
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-brain"></i></div>
+                                <h3 class="card-item-title">认知局限</h3>
+                                <p class="card-item-content">传统规则引擎无法理解自然语言中的上下文、意图和情感，导致大量误判和用户挫败感。</p>
+                                <div class="card-footer">
+                                    <div><i class="fas fa-exclamation-circle" style="color: #ef4444; margin-right: 8px;"></i>
+                                    <strong>影响：</strong>客户满意度下降30%，重复咨询率增加45%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-clock"></i></div>
+                                <h3 class="card-item-title">维护成本指数增长</h3>
+                                <p class="card-item-content">每增加一个新业务场景，需要人工编写和维护大量规则，维护成本随业务复杂度指数级上升。</p>
+                                <div class="card-footer">
+                                    <div><i class="fas fa-exclamation-circle" style="color: #ef4444; margin-right: 8px;"></i>
+                                    <strong>数据：</strong>规则库每扩大100%，维护成本增加300%</div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                                <h3 class="card-item-title">无法规模化学习</h3>
+                                <p class="card-item-content">系统无法从历史对话中自主学习优化，相同问题需要人工反复调整，缺乏进化能力。</p>
+                                <div class="card-footer">
+                                    <div><i class="fas fa-exclamation-circle" style="color: #ef4444; margin-right: 8px;"></i>
+                                    <strong>现状：</strong>知识更新依赖人工，响应速度跟不上业务变化</div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-plug"></i></div>
+                                <h3 class="card-item-title">集成复杂度高</h3>
+                                <p class="card-item-content">与现有业务系统（CRM、ERP、工单系统）对接困难，数据孤岛问题严重。</p>
+                                <div class="card-footer">
+                                    <div><i class="fas fa-exclamation-circle" style="color: #ef4444; margin-right: 8px;"></i>
+                                    <strong>成本：</strong>API接口不统一，二次开发成本高昂</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 页面3：技术架构 -->
+            <section class="page page-3" id="page3">
+                <div class="page-content">
+                    <div class="card-common">
+                        <div class="card-header">
+                            <h2 class="card-title">核心技术架构</h2>
+                            <p class="card-subtitle">基于最先进的AI技术栈，构建稳定、高效、可扩展的企业级智能交互平台</p>
+                        </div>
+                        
+                        <div class="card-grid-2x2">
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+                                <h3 class="card-item-title">多层感知架构</h3>
+                                <p class="card-item-content">意图识别 → 实体提取 → 上下文管理 → 知识检索 → 响应生成的多层处理流水线。</p>
+                                <div class="card-footer">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                                        <span style="color: var(--text-secondary);">准确率: <strong style="color: var(--primary);">99.2%</strong></span>
+                                        <span style="color: var(--text-secondary);">记忆深度: <strong style="color: var(--primary);">15轮</strong></span>
+                                        <span style="color: var(--text-secondary);">多模态支持</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-database"></i></div>
+                                <h3 class="card-item-title">向量知识库</h3>
+                                <p class="card-item-content">基于BERT和Sentence Transformers的语义检索，支持百万级知识点的毫秒级匹配。</p>
+                                <div class="card-footer">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                                        <span style="color: var(--text-secondary);">容量: <strong style="color: var(--primary);">1000万+</strong></span>
+                                        <span style="color: var(--text-secondary);">延迟: <strong style="color: var(--primary);">&lt;50ms</strong></span>
+                                        <span style="color: var(--text-secondary);">语义匹配</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                                <h3 class="card-item-title">微服务架构</h3>
+                                <p class="card-item-content">容器化部署，弹性伸缩，支持每秒千级并发请求，99.95%服务可用性保障。</p>
+                                <div class="card-footer">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                                        <span style="color: var(--text-secondary);">并发: <strong style="color: var(--primary);">5000+ QPS</strong></span>
+                                        <span style="color: var(--text-secondary);">自动扩缩容</span>
+                                        <span style="color: var(--text-secondary);">多可用区</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                                <h3 class="card-item-title">企业级安全</h3>
+                                <p class="card-item-content">端到端加密传输，私有化部署选项，SOC2合规，完整审计日志。</p>
+                                <div class="card-footer">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                                        <span style="color: var(--text-secondary);">AES-256加密</span>
+                                        <span style="color: var(--text-secondary);">GDPR合规</span>
+                                        <span style="color: var(--text-secondary);">完整审计</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tech-stack-section">
+                            <h4>技术栈支持</h4>
+                            <div class="tech-stack-grid">
+                                <div class="tech-stack-item">
+                                    <div class="tech-icon"><i class="fab fa-python"></i></div>
+                                    <div class="tech-name">Python/Flask</div>
+                                </div>
+                                <div class="tech-stack-item">
+                                    <div class="tech-icon"><i class="fab fa-react"></i></div>
+                                    <div class="tech-name">React前端</div>
+                                </div>
+                                <div class="tech-stack-item">
+                                    <div class="tech-icon"><i class="fab fa-docker"></i></div>
+                                    <div class="tech-name">Docker/K8s</div>
+                                </div>
+                                <div class="tech-stack-item">
+                                    <div class="tech-icon"><i class="fas fa-cloud"></i></div>
+                                    <div class="tech-name">AWS/Azure</div>
+                                </div>
+                                <div class="tech-stack-item">
+                                    <div class="tech-icon"><i class="fas fa-robot"></i></div>
+                                    <div class="tech-name">GPT/LLaMA</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 页面4：经济性分析 -->
+            <section class="page page-4" id="page4">
+                <div class="page-content">
+                    <div class="card-common">
+                        <div class="card-header">
+                            <h2 class="card-title">经济性分析</h2>
+                            <p class="card-subtitle">与传统人工客服团队对比，显著降低运营成本，实现快速投资回报</p>
+                        </div>
+                        
+                        <div class="card-grid-2x2">
+                            <div class="card-item enhanced-card">
+                                <div class="cost-comparison-header">
+                                    <div class="cost-icon"><i class="fas fa-users"></i></div>
+                                    <div class="cost-title">
+                                        <h3>传统人工团队</h3>
+                                        <p>5人客服团队 · 年度成本</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="cost-amount cost-red">¥640,000</div>
+                                
+                                <div class="cost-details">
+                                    <ul>
+                                        <li><i class="fas fa-times cost-red-icon"></i><span>人力成本：¥500,000</span></li>
+                                        <li><i class="fas fa-times cost-red-icon"></i><span>培训与管理：¥80,000</span></li>
+                                        <li><i class="fas fa-times cost-red-icon"></i><span>系统工具：¥60,000</span></li>
+                                        <li><i class="fas fa-times cost-red-icon"></i><span>仅支持8小时/天</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="card-item enhanced-card">
+                                <div class="cost-comparison-header">
+                                    <div class="cost-icon"><i class="fas fa-robot"></i></div>
+                                    <div class="cost-title">
+                                        <h3>AI智能中枢</h3>
+                                        <p>企业版 · 年度服务</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="cost-amount cost-green">¥98,000</div>
+                                
+                                <div class="cost-details">
+                                    <ul>
+                                        <li><i class="fas fa-check cost-green-icon"></i><span>全功能AI + 5坐席</span></li>
+                                        <li><i class="fas fa-check cost-green-icon"></i><span>全年技术维护</span></li>
+                                        <li><i class="fas fa-check cost-green-icon"></i><span>专属模型训练</span></li>
+                                        <li><i class="fas fa-check cost-green-icon"></i><span>7×24小时服务</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="cost-savings-card">
+                                <div class="savings-header">
+                                    <div>年度净节省</div>
+                                    <div class="savings-amount">¥542,000</div>
+                                    <div class="savings-subtitle">相当于<span>85%的成本削减</span>，投资回报周期仅<span>2.1个月</span></div>
+                                </div>
+                                
+                                <div class="roi-section">
+                                    <div class="roi-label">
+                                        <span>投资回报率</span>
+                                        <span>553%</span>
+                                    </div>
+                                    <div class="roi-bar">
+                                        <div class="roi-fill"></div>
+                                    </div>
+                                    
+                                    <div class="roi-stats">
+                                        <div class="roi-stat">
+                                            <div class="roi-stat-number">2.1</div>
+                                            <div class="roi-stat-label">月回本周期</div>
+                                        </div>
+                                        <div class="roi-stat">
+                                            <div class="roi-stat-number">553%</div>
+                                            <div class="roi-stat-label">年ROI</div>
+                                        </div>
+                                        <div class="roi-stat">
+                                            <div class="roi-stat-number">5.4倍</div>
+                                            <div class="roi-stat-label">效率提升</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 页面5：实施方案 -->
+            <section class="page page-5" id="page5">
+                <div class="page-content">
+                    <div class="card-common">
+                        <div class="card-header">
+                            <h2 class="card-title">实施流程</h2>
+                            <p class="card-subtitle">四周快速上线，标准化实施流程确保项目成功交付</p>
+                        </div>
+                        
+                        <div class="timeline-container">
+                            <div class="timeline">
+                                <div class="timeline-line"></div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-time">
+                                        <div class="timeline-week">第1周</div>
+                                        <div class="timeline-label">需求诊断</div>
+                                    </div>
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-card">
+                                            <h3><i class="fas fa-clipboard-list"></i> 需求诊断阶段</h3>
+                                            <ul>
+                                                <li>• 业务场景分析与梳理</li>
+                                                <li>• 历史对话数据收集与清洗</li>
+                                                <li>• 成功指标定义与KPI设定</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-time">
+                                        <div class="timeline-week">第2周</div>
+                                        <div class="timeline-label">系统配置</div>
+                                    </div>
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-card">
+                                            <h3><i class="fas fa-cogs"></i> 系统配置阶段</h3>
+                                            <ul>
+                                                <li>• 知识库构建与语义标注</li>
+                                                <li>• 业务流程映射与工作流设计</li>
+                                                <li>• 领域模型微调与参数优化</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-time">
+                                        <div class="timeline-week">第3周</div>
+                                        <div class="timeline-label">测试优化</div>
+                                    </div>
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-card">
+                                            <h3><i class="fas fa-vial"></i> 测试优化阶段</h3>
+                                            <ul>
+                                                <li>• 多轮对话场景测试</li>
+                                                <li>• 意图识别准确率优化</li>
+                                                <li>• 系统性能调优与压力测试</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-time">
+                                        <div class="timeline-week">第4周</div>
+                                        <div class="timeline-label">上线支持</div>
+                                    </div>
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-card">
+                                            <h3><i class="fas fa-rocket"></i> 上线支持阶段</h3>
+                                            <ul>
+                                                <li>• 生产环境部署与监控</li>
+                                                <li>• 运营团队培训与文档交付</li>
+                                                <li>• 监控体系建立与告警配置</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="implementation-guarantee">
+                            <h4>成功实施保障</h4>
+                            <div class="guarantee-grid">
+                                <div class="guarantee-item">
+                                    <div class="guarantee-icon"><i class="fas fa-user-tie"></i></div>
+                                    <div class="guarantee-title">专属项目经理</div>
+                                    <div class="guarantee-desc">全程跟进，确保按时交付</div>
+                                </div>
+                                <div class="guarantee-item">
+                                    <div class="guarantee-icon"><i class="fas fa-shield-alt"></i></div>
+                                    <div class="guarantee-title">100%成功交付</div>
+                                    <div class="guarantee-desc">承诺项目成功，否则退款</div>
+                                </div>
+                                <div class="guarantee-item">
+                                    <div class="guarantee-icon"><i class="fas fa-headset"></i></div>
+                                    <div class="guarantee-title">7×24技术支持</div>
+                                    <div class="guarantee-desc">上线后持续优化支持</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 页面6：价格方案 -->
+            <section class="page page-6" id="page6">
+                <div class="page-content">
+                    <div class="card-common">
+                        <div class="card-header">
+                            <h2 class="card-title">服务方案</h2>
+                            <p class="card-subtitle">三种版本满足不同规模企业的需求，高性价比AI智能解决方案</p>
+                        </div>
+                        
+                        <div class="pricing-grid">
+                            <div class="pricing-card enhanced-card">
+                                <h3>基础版</h3>
+                                
+                                <div class="pricing-amount">¥9,800</div>
+                                
+                                <div class="pricing-period">年度订阅 · 适合初创团队</div>
+                                
+                                <ul class="pricing-features">
+                                    <li><i class="fas fa-check"></i><span>标准AI客服核心功能</span></li>
+                                    <li><i class="fas fa-check"></i><span>支持3个平台接入</span></li>
+                                    <li><i class="fas fa-check"></i><span>基础知识库管理</span></li>
+                                    <li><i class="fas fa-check"></i><span>工作日技术支持</span></li>
+                                    <li><i class="fas fa-check"></i><span>基础数据分析报告</span></li>
+                                </ul>
+                                
+                                <a href="mailto:1850859427@qq.com?subject=NeuraServe基础版咨询&body=咨询方案：基础版（¥9,800/年）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh具体需求：" class="pricing-button">
+                                    <button>咨询方案</button>
+                                </a>
+                            </div>
+                            
+                            <div class="pricing-card enhanced-card featured">
+                                <div class="pricing-badge">⭐ 推荐选择</div>
+                                
+                                <h3>专业版</h3>
+                                
+                                <div class="pricing-amount">¥29,800</div>
+                                
+                                <div class="pricing-period">年度订阅 · 适合成长型企业</div>
+                                
+                                <ul class="pricing-features">
+                                    <li><i class="fas fa-check"></i><span>高级AI + 自定义工作流</span></li>
+                                    <li><i class="fas fa-check"></i><span>无限平台接入</span></li>
+                                    <li><i class="fas fa-check"></i><span>专属模型训练</span></li>
+                                    <li><i class="fas fa-check"></i><span>7×24小时优先支持</span></li>
+                                    <li><i class="fas fa-check"></i><span>高级数据分析与洞察</span></li>
+                                </ul>
+                                
+                                <a href="mailto:1850859427@qq.com?subject=NeuraServe专业版咨询&body=咨询方案：专业版（¥29,800/年）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh具体需求：" class="pricing-button">
+                                    <button>立即咨询</button>
+                                </a>
+                            </div>
+                            
+                            <div class="pricing-card enhanced-card">
+                                <h3>企业版</h3>
+                                
+                                <div class="pricing-amount">定制</div>
+                                
+                                <div class="pricing-period">按需定价 · 适合大型企业</div>
+                                
+                                <ul class="pricing-features">
+                                    <li><i class="fas fa-check"></i><span>全功能私有化部署</span></li>
+                                    <li><i class="fas fa-check"></i><span>API深度集成支持</span></li>
+                                    <li><i class="fas fa-check"></i><span>专属客户成功团队</span></li>
+                                    <li><i class="fas fa-check"></i><span>SLA服务等级保障</span></li>
+                                    <li><i class="fas fa-check"></i><span>定制化开发支持</span></li>
+                                </ul>
+                                
+                                <a href="mailto:1850859427@qq.com?subject=NeuraServe企业版定制&body=咨询方案：企业定制版%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh定制需求：" class="pricing-button">
+                                    <button>联系定制</button>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="trial-section">
+                            <div class="trial-content">
+                                <h4>7天深度试用版</h4>
+                                <p>体验完整功能，包含专业版核心能力，7天试用期结束后可无缝升级为正式版</p>
+                                <div class="trial-price">
+                                    <div class="price">¥500</div>
+                                    <div class="period">/ 7天试用 · 可抵扣正式版费用</div>
+                                </div>
+                            </div>
+                            <div class="trial-button">
+                                <a href="mailto:1850859427@qq.com?subject=NeuraServe7天试用申请&body=申请7天深度试用版（¥500）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh试用需求：" class="trial-btn">
+                                    <button>申请试用</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 页面7：联系页面 -->
+            <section class="page page-7" id="page7">
+                <div class="page-content">
+                    <div class="card-common">
+                        <div class="card-header">
+                            <h2 class="card-title">获取专属技术方案</h2>
+                            <p class="card-subtitle">选择最适合您的联系方式，2小时内获得定制化技术方案</p>
+                        </div>
+                        
+                        <div class="contact-grid">
+                            <div class="contact-card enhanced-card">
+                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                                <h3 class="contact-title">邮件咨询</h3>
+                                
+                                <div class="contact-detail">1850859427@qq.com</div>
+                                
+                                <p class="contact-description">发送需求后获得完整的ROI分析和技术方案文档</p>
+                                
+                                <a href="mailto:1850859427@qq.com?subject=NeuraServe技术方案咨询&body=公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh所属行业：%0D%0A公司规模：%0D%0A具体需求：" class="contact-button">
+                                    <button>发送邮件</button>
+                                </a>
+                            </div>
+                            
+                            <div class="contact-card enhanced-card">
+                                <div class="contact-icon"><i class="fab fa-weixin"></i></div>
+                                <h3 class="contact-title">微信咨询</h3>
+                                
+                                <div class="contact-detail">Jr_gyh</div>
+                                
+                                <p class="contact-description">添加微信获取案例资料和行业解决方案</p>
+                                
+                                <div class="contact-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>响应：工作日9:00-22:00</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>提供：案例资料+实施方案</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-card enhanced-card contact-wide">
+                                <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                                <h3 class="contact-title">电话咨询</h3>
+                                
+                                <div class="contact-phone">
+                                    <a href="tel:13952036081">139-5203-6081</a>
+                                </div>
+                                
+                                <p class="contact-description">适合紧急需求，直接与技术顾问对话，15分钟内回拨</p>
+                                
+                                <div class="contact-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-icon"><i class="far fa-clock"></i></div>
+                                        <div class="stat-title">服务时间</div>
+                                        <div class="stat-value">9:00-22:00</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+                                        <div class="stat-title">紧急支持</div>
+                                        <div class="stat-value">7×24响应</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon"><i class="fas fa-history"></i></div>
+                                        <div class="stat-title">响应承诺</div>
+                                        <div class="stat-value">15分钟回拨</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-submit-section">
+                            <h4>📋 快速需求提交</h4>
+                            <p>点击下方按钮发送邮件，获得个性化的技术方案演示和ROI分析</p>
+                            
+                            <a href="mailto:1850859427@qq.com?subject=NeuraServe技术方案咨询&body=公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh所属行业：%0D%0A公司规模：%0D%0A具体需求：" class="submit-button">
+                                <button>
+                                    <i class="fas fa-paper-plane"></i>
+                                    提交需求，获取技术方案
+                                </button>
+                            </a>
+                            
+                            <div class="privacy-note">
+                                <i class="fas fa-info-circle"></i>
+                                提交即表示同意准备方案，信息严格保密
+                            </div>
                         </div>
                     </div>
                 </div>
