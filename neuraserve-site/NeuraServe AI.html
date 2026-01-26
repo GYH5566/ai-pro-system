@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NeuraServe | 企业级AI智能交互中枢</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 页面指示器 -->
+    <div class="page-indicator">
+        <div class="indicator-dot active" data-page="0"></div>
+        <div class="indicator-dot" data-page="1"></div>
+        <div class="indicator-dot" data-page="2"></div>
+        <div class="indicator-dot" data-page="3"></div>
+        <div class="indicator-dot" data-page="4"></div>
+        <div class="indicator-dot" data-page="5"></div>
+        <div class="indicator-dot" data-page="6"></div>
+    </div>
+    
+    <!-- 滚动提示 -->
+    <div class="scroll-hint" id="scrollHint">
+        <i class="fas fa-chevron-down fa-2x"></i>
+    </div>
+    
+    <!-- 页面容器 -->
+    <div class="pages-container">
+        <div class="pages-wrapper" id="pagesWrapper">
+            <!-- 页面1：英雄区域 -->
+            <section class="page page-1 active" id="page1">
+                <div class="page-content">
+                    <h1 class="hero-title">NeuraServe AI交互中枢</h1>
+                    <p class="hero-subtitle">基于多模态大语言模型的企业级智能解决方案 · 重新定义人机交互效率边界</p>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-number">99.2%</span>
+                            <span class="stat-label">意图识别准确率</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">毫秒级响应</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">&lt;200ms</span>
+                            <span class="stat-label">平均响应延迟</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">行业知识库</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- AI聊天模块 -->
+    <button id="floatingAiButton" class="ai-chat-button">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <div id="floatingAiWindow" class="ai-chat-window">
+        <div class="ai-chat-header">
+            <div class="ai-header-left">
+                <i class="fas fa-comments"></i>
+                <h3>NeuraServe AI助手</h3>
+            </div>
+            <button id="closeAiWindow" class="ai-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div id="aiMessageArea" class="ai-message-area">
+            <div class="ai-message ai-message-left">
+                <strong>AI助手：</strong> 您好！我可以帮您解答关于NeuraServe产品的任何问题。
+            </div>
+        </div>
+        
+        <div class="ai-input-area">
+            <textarea id="aiUserInput" placeholder="输入您的问题..." rows="1"></textarea>
+            <button id="aiSendButton" class="ai-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
