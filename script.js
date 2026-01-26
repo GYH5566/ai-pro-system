@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const touchEndY = e.changedTouches[0].clientY;
         const deltaY = touchStartY - touchEndY;
         
-        if (Math.abs(deltaY) > 50) {
+        if (Math.abs(deltaY) > 385) {
             if (deltaY > 0 && currentPage < totalPages - 1) {
                 goToPage(currentPage + 1);
             } else if (deltaY < 0 && currentPage > 0) {
