@@ -5,7 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NeuraServe | 企业级AI智能交互中枢</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+    <style>/* === 卡片悬停增强效果 === */
+.enhanced-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(58, 134, 255, 0.25),
+                0 0 0 1px rgba(58, 134, 255, 0.1) !important;
+}
+
+/* 边框光效增强 */
+.enhanced-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.enhanced-card:hover::before {
+    opacity: 1;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+}
+
+/* 四周边框光晕 */
+.enhanced-card:hover::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(58, 134, 255, 0.1), rgba(131, 56, 236, 0.1));
+    z-index: -1;
+    animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse {
+    from { opacity: 0.3; }
+    to { opacity: 0.6; }
+}
+
+/* 确保价格页面的推荐卡片效果更明显 */
+.page-6 .enhanced-card[style*="border: 2px solid var"]:hover {
+    box-shadow: 0 25px 50px rgba(58, 134, 255, 0.35) !important;
+    border-color: var(--primary) !important;
+}
         :root {
             --primary: #3a86ff;
             --primary-dark: #2667cc;
@@ -237,6 +291,40 @@
                 grid-template-columns: 1fr;
             }
         }
+/* 专门修复动态创建页面的手机显示问题 */
+@media (max-width: 768px) {
+  /* 针对第2页的网格 */
+  .page-2 [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  /* 移除所有动态页面的固定最小高度 */
+  .page-2 [style*="min-height"],
+  .page-3 [style*="min-height"],
+  .page-4 [style*="min-height"],
+  .page-5 [style*="min-height"],
+  .page-6 [style*="min-height"],
+  .page-7 [style*="min-height"] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+  
+  /* 调整价格页面的卡片布局 */
+  .page-6 [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* 调整联系页面的网格 */
+  .page-7 [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* 减少内边距 */
+  .page-content {
+    padding: 15px 10px !important;
+  }
+}
         
         /* 防止下拉刷新 */
         body {
@@ -356,7 +444,7 @@
                                           border: 1px solid rgba(58, 134, 255, 0.1);
                                           display: flex;
                                           flex-direction: column;
-                                          min-height: 260px;
+                                          min-height: auto;
                                           transition: all 0.3s ease;">
                                     
                                     <div style="position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -1346,7 +1434,7 @@
                                         </ul>
                                     </div>
                                     
-                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe基础版咨询&body=咨询方案：基础版（¥9,800/年）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0A微信：%0D%0A具体需求：" 
+                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe基础版咨询&body=咨询方案：基础版（¥9,800/年）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh具体需求：" 
                                        style="text-decoration: none; display: block;">
                                         <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                                                     color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
@@ -1421,7 +1509,7 @@
                                         </ul>
                                     </div>
                                     
-                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe专业版咨询&body=咨询方案：专业版（¥29,800/年）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0A微信：%0D%0A具体需求：" 
+                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe专业版咨询&body=咨询方案：专业版（¥29,800/年）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh具体需求：" 
                                        style="text-decoration: none; display: block;">
                                         <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                                                     color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
@@ -1486,7 +1574,7 @@
                                         </ul>
                                     </div>
                                     
-                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe企业版定制&body=咨询方案：企业定制版%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0A微信：%0D%0A定制需求：" 
+                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe企业版定制&body=咨询方案：企业定制版%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh定制需求：" 
                                        style="text-decoration: none; display: block;">
                                         <button style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                                                     color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem;
@@ -1520,7 +1608,7 @@
                                         </div>
                                     </div>
                                     <div style="flex-shrink: 0;">
-                                        <a href="mailto:1850859427@qq.com?subject=NeuraServe7天试用申请&body=申请7天深度试用版（¥500）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0A微信：%0D%0A试用需求：" 
+                                        <a href="mailto:1850859427@qq.com?subject=NeuraServe7天试用申请&body=申请7天深度试用版（¥500）%0D%0A%0D%0A公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh试用需求：" 
                                            style="text-decoration: none;">
                                             <button style="padding: 14px 30px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                                                         color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 1rem;
@@ -1647,7 +1735,7 @@
                                         发送需求后获得完整的ROI分析和技术方案文档
                                     </p>
                                     
-                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe技术方案咨询&body=公司名称：%0D%0A联系人：%0D%0A电话：%0D%0A微信：%0D%0A所属行业：%0D%0A公司规模：%0D%0A具体需求：" 
+                                    <a href="mailto:1850859427@qq.com?subject=NeuraServe技术方案咨询&body=公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh所属行业：%0D%0A公司规模：%0D%0A具体需求：" 
                                        style="text-decoration: none; display: block; width: 100%;">
                                         <button style="width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                                                     color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 0.95rem;
@@ -1681,7 +1769,7 @@
                                     </h3>
                                     
                                     <div style="font-size: 1rem; color: var(--primary); margin-bottom: 15px; font-weight: 600;">
-                                        AI_Solution_Expert
+                                        Jr_gyh
                                     </div>
                                     
                                     <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.4; flex-grow: 1;">
@@ -1785,7 +1873,7 @@
                                     点击下方按钮发送邮件，获得个性化的技术方案演示和ROI分析
                                 </p>
                                 
-                                <a href="mailto:1850859427@qq.com?subject=NeuraServe技术方案咨询&body=公司名称：%0D%0A联系人：%0D%0A电话：%0D%0A微信：%0D%0A所属行业：%0D%0A公司规模：%0D%0A具体需求：" 
+                                <a href="mailto:1850859427@qq.com?subject=NeuraServe技术方案咨询&body=公司名称：%0D%0A联系人：%0D%0A电话：%0D%0AJr_gyh所属行业：%0D%0A公司规模：%0D%0A具体需求：" 
                                    style="text-decoration: none; display: inline-block;">
                                     <button style="padding: 15px 35px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
                                                 color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 1rem;
@@ -1953,6 +2041,36 @@
                 window.scrollTo(0, 0);
             });
         });
+// === 添加卡片悬停效果类名（修复滑动问题）===
+setTimeout(function() {
+    // 第二页：给4个痛点卡片添加类名
+    document.querySelectorAll('.page-2 [style*="background: rgba(30, 41, 59, 0.7)"]').forEach(card => {
+        if (!card.classList.contains('enhanced-card')) {
+            card.classList.add('enhanced-card');
+        }
+    });
+    
+    // 第三页：给4个架构卡片添加类名
+    document.querySelectorAll('.page-3 [style*="background: rgba(30, 41, 59, 0.7)"]').forEach(card => {
+        if (!card.classList.contains('enhanced-card')) {
+            card.classList.add('enhanced-card');
+        }
+    });
+    
+    // 第四页：给2个对比卡片添加类名
+    document.querySelectorAll('.page-4 [style*="background: rgba(239, 68, 68, 0.05)"], .page-4 [style*="background: rgba(16, 185, 129, 0.05)"]').forEach(card => {
+        if (!card.classList.contains('enhanced-card')) {
+            card.classList.add('enhanced-card');
+        }
+    });
+    
+    // 第六页：给3个价格卡片添加类名
+    document.querySelectorAll('.page-6 [style*="background: rgba(30, 41, 59, 0.7)"]').forEach(card => {
+        if (!card.classList.contains('enhanced-card')) {
+            card.classList.add('enhanced-card');
+        }
+    });
+}, 100); // 等页面加载完再执行
     </script>
 </body>
 </html>
