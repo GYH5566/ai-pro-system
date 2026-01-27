@@ -199,7 +199,7 @@ function initAIChatModule() {
         }
     });
     
-    // 核心：发送消息函数 - 使用您的API地址
+    // 核心：发送消息函数 - 使用相对路径
     async function sendAiMessage() {
         const text = userInput.value.trim();
         if (!text) return;
@@ -220,8 +220,8 @@ function initAIChatModule() {
         messageArea.scrollTop = messageArea.scrollHeight;
 
         try {
-            // 3. 使用您提供的API地址
-            const apiUrl = 'https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat';
+            // 3. 使用相对路径（关键修改！）
+            const apiUrl = '/api/chat';
             
             console.log('正在请求API地址:', apiUrl);
             
@@ -237,12 +237,22 @@ function initAIChatModule() {
             });
             
             console.log('API响应状态:', response.status);
+            console.log('API响应:', response);
             
             if (!response.ok) {
-                throw new Error(`HTTP错误 ${response.status}`);
+                // 获取更多错误信息
+                let errorText = '';
+                try {
+                    const errorResult = await response.json();
+                    errorText = JSON.stringify(errorResult);
+                } catch (e) {
+                    errorText = await response.text();
+                }
+                throw new Error(`HTTP错误 ${response.status}: ${errorText}`);
             }
             
             const result = await response.json();
+            console.log('AI回复结果:', result);
             
             // 4. 移除"思考中"提示
             thinkingMsg.remove();
@@ -268,13 +278,19 @@ function initAIChatModule() {
         } catch (error) {
             console.error('请求失败:', error);
             thinkingMsg.remove();
+            
+            let errorMessage = "网络连接出错，请：<br>";
+            errorMessage += "1. 检查网络连接<br>";
+            errorMessage += "2. 确认API服务已部署<br>";
+            errorMessage += "3. 或直接通过下方联系方式联系我们";
+            
             const errorMsg = document.createElement('div');
             errorMsg.className = 'ai-message ai-message-left';
-            errorMsg.innerHTML = `<strong>AI助手：</strong> 网络连接出错，请通过页面下方的联系方式获取帮助。`;
+            errorMsg.innerHTML = `<strong>AI助手：</strong> ${errorMessage}`;
             messageArea.appendChild(errorMsg);
             
-            // 显示调试信息（仅开发环境）
-            if (window.location.hostname === 'localhost') {
+            // 显示详细错误信息（开发时有用）
+            if (window.location.hostname === 'localhost' || window.location.hostname.includes('vercel.app')) {
                 const debugMsg = document.createElement('div');
                 debugMsg.className = 'ai-message ai-message-left';
                 debugMsg.style.color = '#ff6b6b';
@@ -296,15 +312,27 @@ function initAIChatModule() {
     });
 }
 
-// 测试API连接（可选）
+// 页面加载后测试API连接
+document.addEventListener('DOMContentLoaded', function() {
+    // 延迟执行，避免影响页面加载
+    setTimeout(() => {
+        testApiConnection();
+    }, 3000);
+});
+
+// 测试API连接
 async function testApiConnection() {
     console.log('正在测试API连接...');
     
-    const apiUrl = 'https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat';
-    
     try {
-        console.log(`测试连接: ${apiUrl}`);
-        const response = await fetch(apiUrl, {
+        // 测试首页
+        console.log('测试首页...');
+        const homeResponse = await fetch('/');
+        console.log('首页状态:', homeResponse.status);
+        
+        // 测试API状态
+        console.log('测试API状态...');
+        const apiResponse = await fetch('/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -312,24 +340,18 @@ async function testApiConnection() {
             body: JSON.stringify({ message: 'test' })
         });
         
-        if (response.ok) {
-            console.log(`✅ API可用: ${apiUrl}`);
+        console.log('API状态:', apiResponse.status);
+        
+        if (apiResponse.ok) {
+            const result = await apiResponse.json();
+            console.log('✅ API可用:', result);
             return true;
         } else {
-            console.log(`❌ API不可用: ${apiUrl} (状态: ${response.status})`);
+            console.log('❌ API不可用，状态:', apiResponse.status);
             return false;
         }
     } catch (error) {
-        console.log(`❌ API连接失败: ${apiUrl}`, error.message);
+        console.log('❌ API连接失败:', error.message);
         return false;
     }
 }
-
-// 页面加载后测试API连接（可选）
-document.addEventListener('DOMContentLoaded', function() {
-    // 延迟执行，避免影响页面加载
-    setTimeout(() => {
-        // 取消注释以测试API连接
-        // testApiConnection();
-    }, 3000);
-});
