@@ -199,7 +199,7 @@ function initAIChatModule() {
         }
     });
     
-    // 核心：发送消息函数
+    // 核心：发送消息函数 - 使用您的API地址
     async function sendAiMessage() {
         const text = userInput.value.trim();
         if (!text) return;
@@ -212,7 +212,7 @@ function initAIChatModule() {
         userInput.value = '';
         userInput.style.height = 'auto';
         
-        // 2. 显示“思考中”提示
+        // 2. 显示"思考中"提示
         const thinkingMsg = document.createElement('div');
         thinkingMsg.className = 'ai-message ai-message-left';
         thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-spinner fa-spin"></i> 思考中...`;
@@ -220,32 +220,49 @@ function initAIChatModule() {
         messageArea.scrollTop = messageArea.scrollHeight;
 
         try {
-            // 3. 发送请求到你的真实后端
-            const response = await fetch('https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat', {
+            // 3. 使用您提供的API地址
+            const apiUrl = 'https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat';
+            
+            console.log('正在请求API地址:', apiUrl);
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     message: text
                 })
             });
+            
+            console.log('API响应状态:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP错误 ${response.status}`);
+            }
+            
             const result = await response.json();
             
-            // 4. 移除“思考中”提示
+            // 4. 移除"思考中"提示
             thinkingMsg.remove();
             
-            // 5. 显示AI回复或错误
+            // 5. 显示AI回复
             if (result.reply) {
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'ai-message ai-message-left';
                 aiMsg.innerHTML = `<strong>AI助手：</strong> ${result.reply}`;
                 messageArea.appendChild(aiMsg);
-            } else {
+            } else if (result.error) {
                 const errorMsg = document.createElement('div');
                 errorMsg.className = 'ai-message ai-message-left';
-                errorMsg.innerHTML = `<strong>AI助手：</strong> 抱歉，暂时无法回答。(${result.error || '未知错误'})`;
+                errorMsg.innerHTML = `<strong>AI助手：</strong> 抱歉，暂时无法回答。(${result.error})`;
                 messageArea.appendChild(errorMsg);
+            } else {
+                const unknownMsg = document.createElement('div');
+                unknownMsg.className = 'ai-message ai-message-left';
+                unknownMsg.innerHTML = `<strong>AI助手：</strong> 抱歉，暂时无法处理您的请求，请稍后重试。`;
+                messageArea.appendChild(unknownMsg);
             }
             
         } catch (error) {
@@ -253,14 +270,23 @@ function initAIChatModule() {
             thinkingMsg.remove();
             const errorMsg = document.createElement('div');
             errorMsg.className = 'ai-message ai-message-left';
-            errorMsg.innerHTML = `<strong>AI助手：</strong> 网络连接出错，请稍后重试。`;
+            errorMsg.innerHTML = `<strong>AI助手：</strong> 网络连接出错，请通过页面下方的联系方式获取帮助。`;
             messageArea.appendChild(errorMsg);
+            
+            // 显示调试信息（仅开发环境）
+            if (window.location.hostname === 'localhost') {
+                const debugMsg = document.createElement('div');
+                debugMsg.className = 'ai-message ai-message-left';
+                debugMsg.style.color = '#ff6b6b';
+                debugMsg.style.fontSize = '0.8rem';
+                debugMsg.innerHTML = `<strong>调试信息：</strong> ${error.message}`;
+                messageArea.appendChild(debugMsg);
+            }
         }
         
-        // 6. 滚动到底部
+        // 滚动到底部
         messageArea.scrollTop = messageArea.scrollHeight;
     }
-    // 发送消息函数结束
     
     // 输入框自动增高
     userInput.addEventListener('input', function() {
@@ -269,3 +295,41 @@ function initAIChatModule() {
         this.style.height = newHeight + 'px';
     });
 }
+
+// 测试API连接（可选）
+async function testApiConnection() {
+    console.log('正在测试API连接...');
+    
+    const apiUrl = 'https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat';
+    
+    try {
+        console.log(`测试连接: ${apiUrl}`);
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: 'test' })
+        });
+        
+        if (response.ok) {
+            console.log(`✅ API可用: ${apiUrl}`);
+            return true;
+        } else {
+            console.log(`❌ API不可用: ${apiUrl} (状态: ${response.status})`);
+            return false;
+        }
+    } catch (error) {
+        console.log(`❌ API连接失败: ${apiUrl}`, error.message);
+        return false;
+    }
+}
+
+// 页面加载后测试API连接（可选）
+document.addEventListener('DOMContentLoaded', function() {
+    // 延迟执行，避免影响页面加载
+    setTimeout(() => {
+        // 取消注释以测试API连接
+        // testApiConnection();
+    }, 3000);
+});
