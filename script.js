@@ -190,6 +190,81 @@ function initAIChatModule() {
     });
     
     closeBtn.addEventListener('click', toggleAiWindow);
+    // 绑定发送按钮事件 - 新增代码开始
+    sendButton.addEventListener('click', sendAiMessage);
+    userInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendAiMessage();
+        }
+    });
+    // 新增代码结束
+
+    // 发送消息的核心函数 - 需要你完整添加这个函数
+    async function sendAiMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        // 显示用户消息
+        const userMsg = document.createElement('div');
+        userMsg.className = 'ai-message ai-message-right';
+        userMsg.innerHTML = `<strong>您：</strong> ${text}`;
+        messageArea.appendChild(userMsg);
+        
+        // 清空输入框
+        userInput.value = '';
+        userInput.style.height = 'auto';
+        
+        // 显示“思考中”的提示
+        const thinkingMsg = document.createElement('div');
+        thinkingMsg.className = 'ai-message ai-message-left';
+        thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-spinner fa-spin"></i> 思考中...`;
+        messageArea.appendChild(thinkingMsg);
+        messageArea.scrollTop = messageArea.scrollHeight;
+
+        try {
+            // 🔥 关键修改：这里要替换成你的真实后端地址
+            const response = await fetch('https://express-js-on-vercel-sage-xi-97.vercel.app/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: text
+                })
+            });
+
+            const result = await response.json();
+
+            // 移除“思考中”提示
+            thinkingMsg.remove();
+
+            if (result.reply) {
+                // 显示AI的真实回复
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'ai-message ai-message-left';
+                aiMsg.innerHTML = `<strong>AI助手：</strong> ${result.reply}`;
+                messageArea.appendChild(aiMsg);
+            } else {
+                // 显示错误信息
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'ai-message ai-message-left';
+                errorMsg.innerHTML = `<strong>AI助手：</strong> 抱歉，暂时无法回答。(${result.error || '未知错误'})`;
+                messageArea.appendChild(errorMsg);
+            }
+        } catch (error) {
+            console.error('请求失败:', error);
+            thinkingMsg.remove();
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'ai-message ai-message-left';
+            errorMsg.innerHTML = `<strong>AI助手：</strong> 网络连接出错，请稍后重试。`;
+            messageArea.appendChild(errorMsg);
+        }
+        
+        // 滚动到底部
+        messageArea.scrollTop = messageArea.scrollHeight;
+    }
+    // 新增函数结束
     
     // 阻止聊天窗口的滚动事件冒泡到页面
     windowEl.addEventListener('wheel', function(e) {
@@ -248,4 +323,3 @@ function initAIChatModule() {
         this.style.height = newHeight + 'px';
     });
 }
-
