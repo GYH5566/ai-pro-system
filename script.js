@@ -183,14 +183,14 @@ function initAIChatModule() {
         }
     }
     
-    // 绑定按钮事件
+    // 绑定窗口开关事件
     button.addEventListener('click', function(e) {
         e.stopPropagation();
         toggleAiWindow();
     });
-    
     closeBtn.addEventListener('click', toggleAiWindow);
-    // 绑定发送按钮事件 - 新增代码开始
+    
+    // 绑定发送事件
     sendButton.addEventListener('click', sendAiMessage);
     userInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -198,24 +198,21 @@ function initAIChatModule() {
             sendAiMessage();
         }
     });
-    // 新增代码结束
-
-    // 发送消息的核心函数 - 需要你完整添加这个函数
+    
+    // 核心：发送消息函数
     async function sendAiMessage() {
         const text = userInput.value.trim();
         if (!text) return;
 
-        // 显示用户消息
+        // 1. 显示用户消息
         const userMsg = document.createElement('div');
         userMsg.className = 'ai-message ai-message-right';
         userMsg.innerHTML = `<strong>您：</strong> ${text}`;
         messageArea.appendChild(userMsg);
-        
-        // 清空输入框
         userInput.value = '';
         userInput.style.height = 'auto';
         
-        // 显示“思考中”的提示
+        // 2. 显示“思考中”提示
         const thinkingMsg = document.createElement('div');
         thinkingMsg.className = 'ai-message ai-message-left';
         thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-spinner fa-spin"></i> 思考中...`;
@@ -223,7 +220,7 @@ function initAIChatModule() {
         messageArea.scrollTop = messageArea.scrollHeight;
 
         try {
-            // 🔥 关键修改：这里要替换成你的真实后端地址
+            // 3. 发送请求到你的真实后端
             const response = await fetch('https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat', {
                 method: 'POST',
                 headers: {
@@ -233,25 +230,24 @@ function initAIChatModule() {
                     message: text
                 })
             });
-
             const result = await response.json();
-
-            // 移除“思考中”提示
+            
+            // 4. 移除“思考中”提示
             thinkingMsg.remove();
-
+            
+            // 5. 显示AI回复或错误
             if (result.reply) {
-                // 显示AI的真实回复
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'ai-message ai-message-left';
                 aiMsg.innerHTML = `<strong>AI助手：</strong> ${result.reply}`;
                 messageArea.appendChild(aiMsg);
             } else {
-                // 显示错误信息
                 const errorMsg = document.createElement('div');
                 errorMsg.className = 'ai-message ai-message-left';
                 errorMsg.innerHTML = `<strong>AI助手：</strong> 抱歉，暂时无法回答。(${result.error || '未知错误'})`;
                 messageArea.appendChild(errorMsg);
             }
+            
         } catch (error) {
             console.error('请求失败:', error);
             thinkingMsg.remove();
@@ -261,60 +257,10 @@ function initAIChatModule() {
             messageArea.appendChild(errorMsg);
         }
         
-        // 滚动到底部
+        // 6. 滚动到底部
         messageArea.scrollTop = messageArea.scrollHeight;
     }
-    // 新增函数结束
-    
-    // 阻止聊天窗口的滚动事件冒泡到页面
-    windowEl.addEventListener('wheel', function(e) {
-        e.stopPropagation();
-    }, { passive: false });
-    
-    windowEl.addEventListener('touchstart', function(e) {
-        e.stopPropagation();
-    }, { passive: true });
-    
-    // 发送消息函数
-    async function sendAiMessage() {
-        const text = userInput.value.trim();
-        if (!text) return;
-        
-        // 显示用户消息
-        const userMsg = document.createElement('div');
-        userMsg.className = 'ai-message ai-message-right';
-        userMsg.innerHTML = `<strong>您：</strong> ${text}`;
-        messageArea.appendChild(userMsg);
-        userInput.value = '';
-        userInput.style.height = 'auto';
-        
-        // 显示"思考中"
-        const thinkingMsg = document.createElement('div');
-        thinkingMsg.className = 'ai-message ai-message-left';
-        thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-cog fa-spin"></i> 思考中...`;
-        messageArea.appendChild(thinkingMsg);
-        messageArea.scrollTop = messageArea.scrollHeight;
-        
-        // 模拟API响应
-        setTimeout(() => {
-            thinkingMsg.remove();
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'ai-message ai-message-left';
-            aiMsg.innerHTML = `<strong>AI助手：</strong> 已收到您的提问："${text}"。请配置DeepSeek API Key以获取真实回复。`;
-            messageArea.appendChild(aiMsg);
-            messageArea.scrollTop = messageArea.scrollHeight;
-        }, 1000);
-    }
-    
-    // 绑定发送事件
-    sendButton.addEventListener('click', sendAiMessage);
-    
-    userInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendAiMessage();
-        }
-    });
+    // 发送消息函数结束
     
     // 输入框自动增高
     userInput.addEventListener('input', function() {
