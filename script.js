@@ -224,7 +224,7 @@ function initAIChatModule() {
 
         try {
             // 🔥 关键修改：这里要替换成你的真实后端地址
-            const response = await fetch('https://express-js-on-vercel-sage-xi-97.vercel.app/chat', {
+            const response = await fetch('https://express-js-on-vercel-30j6dkgjo-neuraserve-ais-projects.vercel.app/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
