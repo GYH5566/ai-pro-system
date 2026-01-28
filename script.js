@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('页面初始化完成！');
 });
 
-// ============= AI聊天模块（纯前端版本）=============
+// ============= AI聊天模块（DeepSeek API版本）=============
 function initAIChatModule() {
     const button = document.getElementById('floatingAiButton');
     const windowEl = document.getElementById('floatingAiWindow');
@@ -170,49 +170,42 @@ function initAIChatModule() {
     const sendButton = document.getElementById('aiSendButton');
     
     let isAiWindowOpen = false;
+    let conversationHistory = [];
     
-    // AI知识库 - 预设回复
-    const AI_KNOWLEDGE = {
-        // 问候
-        '你好': '您好！我是NeuraServe AI助手，很高兴为您服务！😊',
-        'hello': 'Hello! I\'m NeuraServe AI assistant. Welcome!',
-        'hi': 'Hi there! How can I help you today?',
-        
-        // 产品介绍
-        'neuraserve': 'NeuraServe是企业级AI智能交互中枢，基于多模态大语言模型，提供99.2%意图识别准确率和24/7毫秒级响应。',
-        '介绍': 'NeuraServe是专业的企业级AI解决方案，帮助企业实现智能化客服、销售支持、内部咨询等场景。',
-        '产品': '我们的产品包含：多层感知架构、向量知识库、微服务架构、企业级安全四大核心技术模块。',
-        
-        // 功能特点
-        '功能': '🚀 核心功能：<br>• 多层感知架构（99.2%准确率）<br>• 向量知识库（1000万+容量）<br>• 微服务架构（5000+ QPS）<br>• 企业级安全（AES-256加密）',
-        '优势': '💪 核心优势：<br>• 降低成本85%<br>• 2.1个月回本周期<br>• 24/7全天候服务<br>• 支持50+行业知识库',
-        '特点': '⭐ 产品特点：<br>• 高准确率：99.2%意图识别<br>• 快速响应：平均延迟<200ms<br>• 多行业：支持50+行业知识库<br>• 易集成：标准API接口',
-        
-        // 价格方案
-        '价格': '💰 定价方案：<br>• 基础版：¥9,800/年（适合初创团队）<br>• 专业版：¥29,800/年（⭐ 推荐选择）<br>• 企业版：定制方案<br>• 试用版：¥500/7天',
-        '多少钱': '我们提供多种方案：基础版¥9,800/年，专业版¥29,800/年（推荐），企业版可定制，7天试用版¥500。',
-        '收费': '按年订阅收费，具体根据您的需求选择合适方案。',
-        '定价': '基础版¥9,800/年，专业版¥29,800/年，企业版定制，7天试用¥500。',
-        
-        // 联系方式
-        '联系': '📞 联系方式：<br>📧 邮箱：1850859427@qq.com<br>📱 微信：Jr_gyh<br>☎️ 电话：139-5203-6081',
-        '微信': '我们的微信是：Jr_gyh，添加后获取案例资料和行业解决方案。',
-        '电话': '客服电话：139-5203-6081，工作日9:00-22:00接听。',
-        '邮箱': '商务邮箱：1850859427@qq.com，发送需求后2小时内获得完整技术方案。',
-        
-        // 试用部署
-        '试用': '🎯 7天深度试用：<br>• 仅需¥500<br>• 体验完整专业版功能<br>• 可抵扣正式版费用<br>• 快速申请',
-        'demo': '我们提供7天深度试用版，包含专业版核心功能，¥500/7天，可抵扣正式版费用。',
-        '部署': '📅 实施流程（4周上线）：<br>第1周：需求诊断<br>第2周：系统配置<br>第3周：测试优化<br>第4周：上线支持',
-        
-        // 技术相关
-        '技术': '💻 技术架构：<br>• 后端：Python/Flask<br>• 前端：React<br>• 部署：Docker/K8s<br>• 云平台：AWS/Azure<br>• AI模型：GPT/LLaMA',
-        'api': '提供标准RESTful API接口，支持JSON格式，易于与CRM、ERP等现有系统集成。',
-        '集成': '支持与主流业务系统集成，包括CRM、ERP、工单系统等，提供完整的API文档和技术支持。',
-        
-        // 默认回复
-        'default': '感谢您的咨询！我是NeuraServe AI助手，可以为您解答关于产品功能、价格方案、技术优势等问题。如果您有特定需求，请通过页面下方的联系方式获取专属技术方案。'
+    // 系统提示词
+    const SYSTEM_PROMPT = {
+        role: 'system',
+        content: `你是NeuraServe的专业AI客服助手，专门帮助企业了解和使用NeuraServe AI交互中枢产品。你需要：
+
+1. 专业回答关于NeuraServe产品的所有问题
+2. 提供准确的价格和方案建议
+3. 展示产品优势和技术细节
+4. 保持友好、专业的客服态度
+5. 用中文回答，除非用户使用英文提问
+
+产品核心信息：
+- 名称：NeuraServe AI交互中枢
+- 类型：企业级AI智能解决方案
+- 准确率：99.2%意图识别
+- 响应：<200ms平均延迟
+- 服务：24/7全天候
+- 行业：支持50+行业知识库
+
+价格方案：
+1. 基础版：¥9,800/年（适合初创团队）
+2. 专业版：¥29,800/年（⭐推荐选择）
+3. 企业版：定制方案
+4. 7天试用：¥500（可抵扣正式版费用）
+
+联系方式：
+- 邮箱：1850859427@qq.com
+- 微信：Jr_gyh
+- 电话：139-5203-6081
+- 响应：2小时内获得技术方案`
     };
+    
+    // 初始化对话历史
+    conversationHistory.push(SYSTEM_PROMPT);
     
     // 打开/关闭聊天窗口
     function toggleAiWindow() {
@@ -242,8 +235,8 @@ function initAIChatModule() {
         }
     });
     
-    // 发送消息函数（纯前端）
-    function sendAiMessage() {
+    // 发送消息到DeepSeek API
+    async function sendAiMessage() {
         const text = userInput.value.trim();
         if (!text) return;
 
@@ -252,65 +245,90 @@ function initAIChatModule() {
         userMsg.className = 'ai-message ai-message-right';
         userMsg.innerHTML = `<strong>您：</strong> ${text}`;
         messageArea.appendChild(userMsg);
+        
+        // 添加到对话历史
+        conversationHistory.push({
+            role: 'user',
+            content: text
+        });
+        
+        // 清空输入框
         userInput.value = '';
         userInput.style.height = 'auto';
         
         // 显示"思考中"提示
         const thinkingMsg = document.createElement('div');
         thinkingMsg.className = 'ai-message ai-message-left';
-        thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-spinner fa-spin"></i> 思考中...`;
+        thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-spinner fa-spin"></i> 正在思考...`;
         messageArea.appendChild(thinkingMsg);
         messageArea.scrollTop = messageArea.scrollHeight;
         
-        // 模拟AI思考后回复
-        setTimeout(() => {
+        try {
+            // 调用Netlify Function
+            const response = await fetch('/.netlify/functions/deepseek-chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    messages: conversationHistory.slice(-10) // 只发送最近的10条消息
+                })
+            });
+            
+            // 移除思考消息
             thinkingMsg.remove();
             
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || '请求失败');
+            }
+            
+            const data = await response.json();
+            
             // 获取AI回复
-            let reply = getAIResponse(text);
+            const aiResponse = data.choices[0].message.content;
             
             // 显示AI回复
             const aiMsg = document.createElement('div');
             aiMsg.className = 'ai-message ai-message-left';
-            aiMsg.innerHTML = `<strong>AI助手：</strong> ${reply}`;
+            aiMsg.innerHTML = `<strong>AI助手：</strong> ${aiResponse}`;
             messageArea.appendChild(aiMsg);
             
-            // 滚动到底部
-            messageArea.scrollTop = messageArea.scrollHeight;
+            // 添加到对话历史
+            conversationHistory.push({
+                role: 'assistant',
+                content: aiResponse
+            });
             
-        }, 600 + Math.random() * 400); // 随机延迟600-1000ms，模拟AI思考
-    }
-    
-    // AI回复逻辑
-    function getAIResponse(userMessage) {
-        const lowerMessage = userMessage.toLowerCase();
-        
-        // 检查关键词匹配
-        for (const [keyword, response] of Object.entries(AI_KNOWLEDGE)) {
-            if (keyword !== 'default' && lowerMessage.includes(keyword.toLowerCase())) {
-                return response;
+            // 保持对话历史长度，避免太长
+            if (conversationHistory.length > 20) {
+                conversationHistory = [
+                    SYSTEM_PROMPT,
+                    ...conversationHistory.slice(-18)
+                ];
             }
+            
+        } catch (error) {
+            console.error('AI请求错误:', error);
+            
+            // 移除思考消息
+            thinkingMsg.remove();
+            
+            // 显示错误消息
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'ai-message ai-message-left';
+            errorMsg.innerHTML = `<strong>AI助手：</strong> ${error.message || '抱歉，服务暂时不可用，请稍后再试。'}`;
+            messageArea.appendChild(errorMsg);
+            
+            // 添加错误处理建议
+            const suggestionMsg = document.createElement('div');
+            suggestionMsg.className = 'ai-message ai-message-left';
+            suggestionMsg.innerHTML = `<strong>提示：</strong> 您也可以直接通过页面下方的联系方式联系我们。`;
+            messageArea.appendChild(suggestionMsg);
         }
         
-        // 英文关键词匹配
-        if (lowerMessage.includes('price') || lowerMessage.includes('cost')) {
-            return AI_KNOWLEDGE['价格'];
-        }
-        if (lowerMessage.includes('contact') || lowerMessage.includes('email')) {
-            return AI_KNOWLEDGE['联系'];
-        }
-        if (lowerMessage.includes('trial') || lowerMessage.includes('demo')) {
-            return AI_KNOWLEDGE['试用'];
-        }
-        if (lowerMessage.includes('feature') || lowerMessage.includes('function')) {
-            return AI_KNOWLEDGE['功能'];
-        }
-        if (lowerMessage.includes('advantage') || lowerMessage.includes('benefit')) {
-            return AI_KNOWLEDGE['优势'];
-        }
-        
-        // 默认回复
-        return AI_KNOWLEDGE['default'];
+        // 滚动到底部
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
     
     // 输入框自动增高
@@ -327,11 +345,13 @@ function initAIChatModule() {
 // 添加预设问题按钮
 function addPresetQuestions() {
     const presetQuestions = [
-        "产品功能",
-        "价格方案", 
-        "申请试用",
-        "技术支持",
-        "部署时间"
+        "产品功能有哪些？",
+        "价格是多少？", 
+        "如何申请试用？",
+        "技术架构是什么？",
+        "部署需要多久？",
+        "能集成现有系统吗？",
+        "有什么成功案例？"
     ];
     
     const inputArea = document.querySelector('.ai-input-area');
@@ -400,5 +420,5 @@ function addPresetQuestions() {
 // 页面加载完成提示
 window.addEventListener('load', function() {
     console.log('✅ NeuraServe AI网站加载完成！');
-    console.log('✅ AI聊天：纯前端版本，稳定可靠');
+    console.log('✅ AI聊天：DeepSeek API版本，集成成功');
 });
