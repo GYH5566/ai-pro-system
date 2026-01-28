@@ -1,110 +1,137 @@
 const axios = require('axios');
 
 exports.handler = async function(event, context) {
+  // 处理预检请求（OPTIONS）
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+        'Access-Control-Max-Age': '86400'
+      },
+      body: ''
+    };
+  }
+
+  // 只处理POST请求
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' }),
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
   try {
-    const { messages } = JSON.parse(event.body);
+    console.log('收到AI聊天请求');
+    
+    const { messages } = JSON.parse(event.body || '{}');
     const apiKey = process.env.DEEPSEEK_API_KEY;
     
     if (!apiKey) {
+      console.error('❌ API密钥未配置');
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'API key not configured' }),
-        headers: { 'Content-Type': 'application/json' }
-      };
-    }
-
-    // 添加超时配置
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000); // 8秒超时
-
-    try {
-      const response = await axios.post(
-        'https://api.deepseek.com/chat/completions',
-        {
-          model: 'deepseek-chat',
-          messages: [
-            {
-              role: 'system',
-              content: `【指令】NeuraServe AI客服。回复要求：
-1. 简洁直接，不超过150字
-2. 不说客套话，只讲关键信息
-3. 结构：要点+行动建议
-4. 语气：专业、高效、务实
-
-【产品信息】
-• 名称：NeuraServe AI交互中枢
-• 核心：企业级AI客服解决方案
-• 性能：99.2%准确率，<200ms响应
-• 价格：基础¥9800/年，专业¥29800/年（推荐），定制方案，试用¥500/7天
-• 联系：1850859427@qq.com（微信Jr_gyh），139-5203-6081
-
-【回复示例】
-用户：价格？
-AI：¥9800/年起，推荐专业版¥29800。具体根据需求定。发邮件获取报价。
-
-用户：试用？
-AI：¥500/7天试用专业版，可抵扣正式费用。发需求到1850859427@qq.com。
-
-用户：技术？
-AI：多层感知+向量知识库+微服务架构。支持50+行业，24/7稳定。`
-            },
-            ...messages
-          ],
-          max_tokens: 300,  // 大幅减少输出长度！
-          temperature: 0.6, // 降低随机性，更稳定
-          presence_penalty: -0.5, // 减少重复内容
-          frequency_penalty: 0.3, // 避免啰嗦
-          stream: false
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-          },
-          timeout: 8000,
-          signal: controller.signal
-        }
-      );
-
-      clearTimeout(timeout);
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify(response.data),
         headers: {
-          'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type'
-        }
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          error: '服务器配置错误，请联系管理员',
+          details: 'DEEPSEEK_API_KEY环境变量未设置'
+        })
       };
-      
-    } catch (axiosError) {
-      clearTimeout(timeout);
-      throw axiosError;
     }
-    
-  } catch (error) {
-    console.error('API Error:', error.message);
-    
-    let errorMessage = '服务繁忙，请稍后';
-    
+
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          error: '请求参数错误',
+          details: 'messages参数为空或格式错误'
+        })
+      };
+    }
+
+    console.log('开始调用DeepSeek API，消息数量:', messages.length);
+    console.log('最后一条消息内容:', messages[messages.length - 1]?.content?.substring(0, 50) + '...');
+
+    // 调用DeepSeek API
+    const response = await axios({
+      method: 'POST',
+      url: 'https://api.deepseek.com/chat/completions',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      data: {
+        model: 'deepseek-chat',
+        messages: messages,
+        max_tokens: 2000,
+        temperature: 0.7,
+        stream: false
+      },
+      timeout: 30000  // 30秒超时
+    });
+
+    console.log('✅ DeepSeek API调用成功，返回数据:', {
+      hasChoices: !!response.data?.choices,
+      choiceCount: response.data?.choices?.length || 0
+    });
+
     return {
-      statusCode: 500,
-      body: JSON.stringify({ 
-        error: errorMessage
-      }),
+      statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
-      }
+      },
+      body: JSON.stringify(response.data)
+    };
+    
+  } catch (error) {
+    console.error('❌ DeepSeek API错误:');
+    console.error('错误消息:', error.message);
+    console.error('错误代码:', error.code);
+    console.error('状态码:', error.response?.status);
+    
+    let userMessage = 'AI服务暂时繁忙，请稍后再试';
+    let statusCode = 500;
+    
+    if (error.code === 'ECONNABORTED') {
+      userMessage = '请求超时，请简化问题或稍后重试';
+      statusCode = 408;
+    } else if (error.response?.status === 401) {
+      userMessage = 'API密钥错误，请联系管理员';
+      statusCode = 401;
+    } else if (error.response?.status === 429) {
+      userMessage = '请求过于频繁，请稍后再试';
+      statusCode = 429;
+    } else if (error.response?.status === 400) {
+      userMessage = '请求参数错误，请稍后重试';
+      statusCode = 400;
+    }
+
+    return {
+      statusCode: statusCode,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ 
+        error: userMessage,
+        details: error.message,
+        status: error.response?.status
+      })
     };
   }
 };
