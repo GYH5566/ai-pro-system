@@ -2,7 +2,7 @@
   "name": "neuraserve-ai",
   "version": "1.0.0",
   "description": "NeuraServe AI交互中枢",
-  "scripts": {
-    "build": "echo 'Build successful'"
+  "dependencies": {
+    "axios": "^1.6.0"
   }
 }
