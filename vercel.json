@@ -2,30 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/chat.py",
+      "src": "api.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "frontend/*",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/chat.py"
+      "dest": "/api.py"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/index.html"
-    },
-    {
-      "src": "/style.css",
-      "dest": "/frontend/style.css"
-    },
-    {
-      "src": "/script.js",
-      "dest": "/frontend/script.js"
+      "dest": "/index.html"
     }
   ]
 }
