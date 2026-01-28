@@ -1819,3 +1819,53 @@ html, body {
         font-size: 0.9rem !important;
     }
 }
+/* ==== AI聊天增强样式 ==== */
+.ai-message {
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-message-left strong {
+    color: var(--primary);
+}
+
+.ai-message-right strong {
+    color: #60a5fa;
+}
+
+.preset-questions button {
+    transition: all 0.2s ease !important;
+}
+
+.preset-questions button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(58, 134, 255, 0.2) !important;
+}
+
+/* 加载动画 */
+.fa-spinner.fa-spin {
+    color: var(--primary);
+    margin-right: 8px;
+}
+
+/* 消息响应式 */
+@media (max-width: 768px) {
+    .ai-message {
+        max-width: 95% !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .preset-questions {
+        gap: 6px !important;
+    }
+    
+    .preset-questions button {
+        padding: 5px 10px !important;
+        font-size: 0.75rem !important;
+    }
+}
