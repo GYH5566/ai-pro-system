@@ -1,6 +1,6 @@
 {
   "functions": {
-    "API/index.js": {
+    "index.js": {
       "maxDuration": 10
     }
   },
@@ -8,7 +8,7 @@
     {
       "src": "/api/(.*)",
       "methods": ["POST", "OPTIONS"],
-      "dest": "/API/index.js"
+      "dest": "/index.js"
     },
     {
       "src": "/(.*)",
