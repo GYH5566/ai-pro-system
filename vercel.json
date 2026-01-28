@@ -1,13 +1,17 @@
 {
   "functions": {
-    "api.py": {
+    "api/chat.js": {
       "maxDuration": 10
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api.py"
+      "src": "/api/chat",
+      "dest": "/api/chat.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
