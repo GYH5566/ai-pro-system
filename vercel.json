@@ -1,18 +1,8 @@
 {
-  "functions": {
-    "index.js": {
-      "maxDuration": 10
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "methods": ["POST", "OPTIONS"],
-      "dest": "/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/*",
+      "destination": "/index.html"
     }
   ]
 }
