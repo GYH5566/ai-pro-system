@@ -172,40 +172,109 @@ function initAIChatModule() {
     let isAiWindowOpen = false;
     let conversationHistory = [];
     
-    // 系统提示词
+    // 系统提示词（极致简洁版 - 减少废话，降低成本）
     const SYSTEM_PROMPT = {
         role: 'system',
-        content: `你是NeuraServe的专业AI客服助手，专门帮助企业了解和使用NeuraServe AI交互中枢产品。你需要：
-
-1. 专业回答关于NeuraServe产品的所有问题
-2. 提供准确的价格和方案建议
-3. 展示产品优势和技术细节
-4. 保持友好、专业的客服态度
-5. 用中文回答，除非用户使用英文提问
-
-产品核心信息：
-- 名称：NeuraServe AI交互中枢
-- 类型：企业级AI智能解决方案
-- 准确率：99.2%意图识别
-- 响应：<200ms平均延迟
-- 服务：24/7全天候
-- 行业：支持50+行业知识库
-
-价格方案：
-1. 基础版：¥9,800/年（适合初创团队）
-2. 专业版：¥29,800/年（⭐推荐选择）
-3. 企业版：定制方案
-4. 7天试用：¥500（可抵扣正式版费用）
-
-联系方式：
-- 邮箱：1850859427@qq.com
-- 微信：Jr_gyh
-- 电话：139-5203-6081
-- 响应：2小时内获得技术方案`
+        content: `NeuraServe AI客服助手。产品：企业级AI客服解决方案，99.2%准确率，<200ms响应，支持50+行业。价格：基础¥9800/年，专业¥29800/年（推荐），定制方案，试用¥500/7天。联系：1850859427@qq.com（微信Jr_gyh），139-5203-6081。回复要求：简洁直接，不超过150字，不说客套话，只讲关键信息，专业高效。`
     };
     
-    // 初始化对话历史
-    conversationHistory.push(SYSTEM_PROMPT);
+    // 加载对话历史
+    function loadConversation() {
+        const saved = localStorage.getItem('ai_conversation');
+        if (saved) {
+            try {
+                conversationHistory = JSON.parse(saved);
+                // 确保系统提示词在首位
+                if (conversationHistory.length > 0 && conversationHistory[0].role === 'system') {
+                    // 已经有系统提示词，不做处理
+                } else {
+                    // 重新添加系统提示词
+                    conversationHistory = [SYSTEM_PROMPT, ...conversationHistory];
+                }
+            } catch (e) {
+                console.error('加载对话历史失败:', e);
+                conversationHistory = [SYSTEM_PROMPT];
+            }
+        } else {
+            conversationHistory = [SYSTEM_PROMPT];
+        }
+        
+        // 限制历史记录长度
+        if (conversationHistory.length > 15) {
+            conversationHistory = [
+                SYSTEM_PROMPT,
+                ...conversationHistory.slice(-14)
+            ];
+        }
+        
+        // 恢复显示历史消息（前5条）
+        displayHistoryMessages();
+    }
+    
+    // 保存对话历史
+    function saveConversation() {
+        try {
+            // 只保存最近15条对话
+            const toSave = conversationHistory.length > 15 ? 
+                [SYSTEM_PROMPT, ...conversationHistory.slice(-14)] : 
+                conversationHistory;
+            localStorage.setItem('ai_conversation', JSON.stringify(toSave));
+        } catch (e) {
+            console.error('保存对话历史失败:', e);
+        }
+    }
+    
+    // 显示历史消息
+    function displayHistoryMessages() {
+        // 清空消息区域
+        messageArea.innerHTML = '';
+        
+        // 只显示用户和AI的对话（跳过系统提示词）
+        const displayHistory = conversationHistory.filter(msg => 
+            msg.role === 'user' || msg.role === 'assistant'
+        );
+        
+        // 显示最后5条消息
+        const recentMessages = displayHistory.slice(-5);
+        
+        recentMessages.forEach(msg => {
+            const msgElement = document.createElement('div');
+            if (msg.role === 'user') {
+                msgElement.className = 'ai-message ai-message-right';
+                msgElement.innerHTML = `<strong>您：</strong> ${msg.content}`;
+            } else {
+                msgElement.className = 'ai-message ai-message-left';
+                msgElement.innerHTML = `<strong>AI助手：</strong> ${msg.content}`;
+            }
+            messageArea.appendChild(msgElement);
+        });
+        
+        // 滚动到底部
+        setTimeout(() => {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }, 100);
+    }
+    
+    // 加载对话历史
+    loadConversation();
+    
+    // 首次打开聊天窗口显示欢迎语
+    if (!localStorage.getItem('ai_welcome_shown')) {
+        setTimeout(() => {
+            const welcomeMsg = document.createElement('div');
+            welcomeMsg.className = 'ai-message ai-message-left';
+            welcomeMsg.innerHTML = `<strong>AI助手：</strong> 我是NeuraServe AI助手，可解答产品、价格、技术等问题。有什么需要？`;
+            messageArea.appendChild(welcomeMsg);
+            localStorage.setItem('ai_welcome_shown', 'true');
+            
+            // 保存到对话历史
+            conversationHistory.push({
+                role: 'assistant',
+                content: '我是NeuraServe AI助手，可解答产品、价格、技术等问题。有什么需要？'
+            });
+            saveConversation();
+        }, 500);
+    }
     
     // 打开/关闭聊天窗口
     function toggleAiWindow() {
@@ -259,21 +328,27 @@ function initAIChatModule() {
         // 显示"思考中"提示
         const thinkingMsg = document.createElement('div');
         thinkingMsg.className = 'ai-message ai-message-left';
-        thinkingMsg.innerHTML = `<strong>AI助手：</strong> <i class="fas fa-spinner fa-spin"></i> 正在思考...`;
+        thinkingMsg.innerHTML = `<strong>AI助手：</strong> <span class="typing-indicator"><span>.</span><span>.</span><span>.</span></span>`;
         messageArea.appendChild(thinkingMsg);
         messageArea.scrollTop = messageArea.scrollHeight;
         
         try {
             // 调用Netlify Function
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8秒超时
+            
             const response = await fetch('/.netlify/functions/deepseek-chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    messages: conversationHistory.slice(-10) // 只发送最近的10条消息
-                })
+                    messages: conversationHistory.slice(-8) // 只发送最近的8条消息
+                }),
+                signal: controller.signal
             });
+            
+            clearTimeout(timeoutId);
             
             // 移除思考消息
             thinkingMsg.remove();
@@ -308,6 +383,9 @@ function initAIChatModule() {
                 ];
             }
             
+            // 保存对话历史
+            saveConversation();
+            
         } catch (error) {
             console.error('AI请求错误:', error);
             
@@ -317,14 +395,21 @@ function initAIChatModule() {
             // 显示错误消息
             const errorMsg = document.createElement('div');
             errorMsg.className = 'ai-message ai-message-left';
-            errorMsg.innerHTML = `<strong>AI助手：</strong> ${error.message || '抱歉，服务暂时不可用，请稍后再试。'}`;
+            
+            if (error.name === 'AbortError') {
+                errorMsg.innerHTML = `<strong>AI助手：</strong> 请求超时，请简化问题重试。`;
+            } else {
+                errorMsg.innerHTML = `<strong>AI助手：</strong> 服务繁忙，请稍后。`;
+            }
+            
             messageArea.appendChild(errorMsg);
             
-            // 添加错误处理建议
-            const suggestionMsg = document.createElement('div');
-            suggestionMsg.className = 'ai-message ai-message-left';
-            suggestionMsg.innerHTML = `<strong>提示：</strong> 您也可以直接通过页面下方的联系方式联系我们。`;
-            messageArea.appendChild(suggestionMsg);
+            // 保存错误信息到历史
+            conversationHistory.push({
+                role: 'assistant',
+                content: '服务繁忙，请稍后重试或直接联系我们。'
+            });
+            saveConversation();
         }
         
         // 滚动到底部
@@ -345,13 +430,14 @@ function initAIChatModule() {
 // 添加预设问题按钮
 function addPresetQuestions() {
     const presetQuestions = [
-        "产品功能有哪些？",
-        "价格是多少？", 
-        "如何申请试用？",
-        "技术架构是什么？",
-        "部署需要多久？",
-        "能集成现有系统吗？",
-        "有什么成功案例？"
+        "价格多少？",
+        "如何试用？", 
+        "技术架构？",
+        "部署时间？",
+        "集成方案？",
+        "安全措施？",
+        "行业案例？",
+        "联系方式？"
     ];
     
     const inputArea = document.querySelector('.ai-input-area');
@@ -417,8 +503,36 @@ function addPresetQuestions() {
     inputArea.parentNode.insertBefore(presetContainer, inputArea);
 }
 
+// 添加打字动画CSS
+const typingStyle = document.createElement('style');
+typingStyle.textContent = `
+  .typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+  }
+  .typing-indicator span {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #3a86ff;
+    margin: 0 2px;
+    animation: typing 1.4s infinite ease-in-out;
+  }
+  .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+  .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+  @keyframes typing {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+`;
+document.head.appendChild(typingStyle);
+
 // 页面加载完成提示
 window.addEventListener('load', function() {
     console.log('✅ NeuraServe AI网站加载完成！');
-    console.log('✅ AI聊天：DeepSeek API版本，集成成功');
+    console.log('✅ AI聊天：DeepSeek API版本，极致优化完成');
+    console.log('✅ 功能：对话历史保存、预设问题、欢迎语、打字动画');
+    console.log('✅ 优化：简洁回复，降低成本，快速响应');
 });
