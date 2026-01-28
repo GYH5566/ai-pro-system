@@ -1,0 +1,6 @@
+{
+  "name": "neuraserve-ai",
+  "version": "1.0.0",
+  "description": "NeuraServe AI交互中枢",
+  "dependencies": {}
+}
